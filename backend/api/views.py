@@ -11,12 +11,11 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from users.models import User
 
 from . import paginators, permissions, serializers
 from .mixins import AddDelViewMixin
 from recipes import models
-
+from users.models import User
 
 class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     """Кастомный вьюсет Djoser."""
