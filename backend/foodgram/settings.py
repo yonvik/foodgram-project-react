@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
 
-from decouple import Csv, config
+from decouple import config
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,16 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='i')
 
 DEBUG = True
 
-
-
-CSRF_TRUSTED_ORIGINS = config(
-    'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost http://127.0.0.1',
-    cast=Csv()
-)
-
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', ]
-
+ALLOWED_HOSTS = ['*', ]
 
 ROOT_URLCONF = 'foodgram.urls'
 
@@ -141,7 +132,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATICFILES_DIRS = [BASE_DIR + '/api/static/']
+STATICFILES_DIRS = [BASE_DIR + '/static/']
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
