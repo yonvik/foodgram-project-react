@@ -14,10 +14,10 @@ Here you can:
 	- > DB_ENGINE=django.db.backends.postgresql 
 	- > DB_NAME=postgres 
 	- > POSTGRES_USER=postgres 
-	- > POSTGRES_PASSWORD=123456789 
+	- > POSTGRES_PASSWORD=12345678 
 	- > DB_HOST=db 
 	- > DB_PORT=5432 
-	- > SECRET_KEY = 'super%difficult%key%1233456789' # Здесь нужен ваш ключь
+	- > SECRET_KEY = 'super%difficult%key%123345678' # Здесь нужен ваш ключь
 	- > ALLOWED_HOSTS = ['*']
 	- > DEBUG = False
 - Создать образы докера:
