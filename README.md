@@ -7,7 +7,7 @@ Here you can:
 - Добавить его в список покупок и скачать в формате .txt
 ## Установка:
 - Скачать репрозиторий:
-	- > git clone git@github.com:yonvik/foodgram-project-react.git
+	- > git clone [git@github.com:yonvik/foodgram-project-react.git](https://github.com/yonvik/foodgram-project-react.git)
 - Перейти в директорию infra.
 	- > cd  foodgram-project-react/infra
 - Создать .env файл внутри и заполнить данные:
