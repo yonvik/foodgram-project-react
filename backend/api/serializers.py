@@ -1,11 +1,11 @@
 from django.conf import settings
-from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
-from recipes.validators import (check_value_validate,
-                                recipe_amount_ingredients_set)
+from django.db.models import F
 from rest_framework import serializers
 
-from recipes.models import Ingredient, Recipe, Tag
+from recipes.validators import check_value_validate
+from recipes.utils import recipe_amount_ingredients_set
+from recipes.models import Ingredient, Recipe, Tag, AmountIngredient
 from users.models import User
 from users.validators import username_validator
 
@@ -42,7 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
         """Проверка подписки пользователей."""
 
         user = self.context.get('request').user
-        if user.is_anonymous or (user == obj):
+        if user.is_anonymous or user == obj:
             return False
         return user.subscribe.filter(id=obj.id).exists()
 
@@ -84,11 +84,6 @@ class UserSubscribeSerializer(UserSerializer):
             'recipes_count',
         )
         read_only_fields = '__all__',
-
-    def get_is_subscribed(*args):
-        """Проверка подписки пользователей."""
-
-        return True
 
     def get_recipes_count(self, obj):
         """ Показывает общее количество рецептов у каждого автора."""
@@ -175,13 +170,30 @@ class RecipeSerializer(serializers.ModelSerializer):
         if user.is_anonymous:
             return False
         return user.carts.filter(id=obj.id).exists()
+        
+    def to_internal_value(self, data):
+        new_data = super().to_internal_value(data)
+        new_data['ingredients'] = data['ingredients']
+        return new_data
+
+    def create_amount_ingredients(self, ingredients, recipe):
+        """Обновляет ингридиенты в рецепте."""
+        new_ingredients = [
+            AmountIngredient(
+                recipe=recipe,
+                ingredients=ingredient['ingredient'],
+                amount=ingredient.get('amount'),
+            )
+            for ingredient in ingredients
+        ]
+        AmountIngredient.objects.bulk_create(new_ingredients)
 
     def validate(self, data):
         """Проверка вводных данных при создании/редактировании рецепта."""
 
         name = str(self.initial_data.get('name')).strip()
         tags = self.initial_data.get('tags')
-        ingredients = self.initial_data.get('ingredients')
+        ingredients = data['ingredients']
         values_as_list = (tags, ingredients)
 
         for value in values_as_list:
@@ -222,29 +234,14 @@ class RecipeSerializer(serializers.ModelSerializer):
         recipe_amount_ingredients_set(recipe, ingredients)
         return recipe
 
-    def update(self, recipe, validated_data):
+    def update(self, obj, validated_data):
         """Обновляет рецепт."""
-        
-        tags = validated_data.get('tags')
-        ingredients = validated_data.get('ingredients')
 
-        recipe.image = validated_data.get(
-            'image', recipe.image)
-        recipe.name = validated_data.get(
-            'name', recipe.name)
-        recipe.text = validated_data.get(
-            'text', recipe.text)
-        recipe.cooking_time = validated_data.get(
-            'cooking_time', recipe.cooking_time)
-
-        if tags:
-            recipe.tags.clear()
-            recipe.tags.set(tags)
-
-        if ingredients:
-            recipe.ingredients.clear()
-            recipe_amount_ingredients_set(recipe, ingredients)
-
-        recipe.save()
-        return recipe
-
+        if 'ingredients' in validated_data:
+            ingredients = validated_data.pop('ingredients')
+            obj.ingredients.clear()
+            self.create_amount_ingredients(ingredients, obj)
+        if 'tags' in validated_data:
+            tags = validated_data.pop('tags')
+            obj.tags.set(tags)
+        return super().update(obj, validated_data)

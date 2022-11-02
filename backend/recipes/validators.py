@@ -1,5 +1,4 @@
 from django.core.validators import RegexValidator
-from recipes.models import AmountIngredient
 from rest_framework.serializers import ValidationError
 
 
@@ -26,13 +25,3 @@ def hex_color_validator(value):
         "начинаться с '#' и быть длинной 6 или 3 символа, после '#'",
         code='Переданый цвет не типа HEX.'
     )(value=value)
-
-
-def recipe_amount_ingredients_set(recipe, ingredients):
-    """Записывает ингредиенты вложенные в рецепт."""
-    for ingredient in ingredients:
-        AmountIngredient.objects.get_or_create(
-            recipe=recipe,
-            ingredients=ingredient['ingredient'],
-            amount=ingredient['amount']
-        )

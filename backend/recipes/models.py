@@ -42,6 +42,7 @@ class Tag(Model):
     def __str__(self):
         return self.name
 
+
 class Ingredient(Model):
     """Ингридиенты для рецептов."""
     name = CharField(

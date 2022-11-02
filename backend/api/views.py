@@ -1,7 +1,7 @@
 from itertools import chain
 from django.conf import settings
 from django.contrib.auth.hashers import check_password
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import FieldError
 from django.db.models import F, Sum
 from django.http.response import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
@@ -12,7 +12,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from . import paginators, permissions, serializers
+from . import paginators, permissions, serializers, filters
 from .mixins import AddDelViewMixin
 from recipes import models
 from users.models import User
@@ -50,8 +50,8 @@ def create_token(request):
     serializer = serializers.TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     try:
-        user = User.objects.get(email=serializer.data['email'])
-        if not check_password(serializer.data['password'], user.password):
+        user = User.objects.get(email=serializer.validated_data['email'])
+        if not check_password(serializer.validated_data['password'], user.password):
             return Response(
                 {"Данные авторизации предоставлены не верно."},
                 status=status.HTTP_400_BAD_REQUEST)
@@ -60,7 +60,7 @@ def create_token(request):
             {"auth_token": f"{token.access_token}"},
             status=status.HTTP_201_CREATED
         )
-    except ObjectDoesNotExist:
+    except FieldError:
         return Response(
             {"Пользователя с данным email не существует."},
             status=status.HTTP_400_BAD_REQUEST)
@@ -82,10 +82,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = models.Tag.objects.all()
     serializer_class = serializers.TagSerializer
-
-    def get_paginated_response(self, data):
-        """Возвращение данных без пагинации."""
-        return Response(data)
+    pagination_class = None
 
 
 class IngredientViewSet(mixins.ListModelMixin,
@@ -94,19 +91,11 @@ class IngredientViewSet(mixins.ListModelMixin,
                                 ):
     """Работет с игридиентами."""
 
+    queryset = models.Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
     pagination_class = None
-
-    def get_queryset(self):
-        name = self.request.query_params.get('name')
-        if name:
-            queryset_start_with = models.Ingredient.objects.filter(
-                name__istartswith=name)
-            queryset_contains = models.Ingredient.objects.filter(
-                name__icontains=name).exclude(id__in=queryset_start_with)
-            return chain(queryset_start_with, queryset_contains)
-        return models.Ingredient.objects.all()
-
+    filter_backends = [filters.IngredientSearchFilterSet, ]
+    search_fields = ['^name', ]
 
 class RecipeViewSet(viewsets.ModelViewSet, AddDelViewMixin):
     """Работает с рецептами."""
