@@ -198,6 +198,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
 
     def create_amount_ingredients(self, ingredients, recipe):
         """Обновляет ингридиенты в рецепте."""
+        
         create_ingredient = [
             AmountIngredient(
                 recipe=recipe,

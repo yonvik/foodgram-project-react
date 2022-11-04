@@ -1,5 +1,4 @@
 from django_filters.rest_framework import filters, NumberFilter, FilterSet
-
 from rest_framework.filters import SearchFilter
 
 from recipes.models import Tag, Recipe

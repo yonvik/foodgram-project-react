@@ -142,7 +142,7 @@ class RecipeViewSet(viewsets.ModelViewSet, AddDelViewMixin):
         ).values(
             ingredient=F('ingredients__name'),
             measure=F('ingredients__measurement_unit')
-        ).annotate(amount=Sum('amount'))
+        ).annotate(ingredients_value=Sum('amount'))
 
         filename = f'{user.username}_shopping_list.txt'
         shopping_list = (
@@ -150,7 +150,7 @@ class RecipeViewSet(viewsets.ModelViewSet, AddDelViewMixin):
         )
         for ing in ingredients:
             shopping_list += (
-                f'{ing["ingredient"]}: {ing["amount"]} {ing["measure"]}\n'
+                f'{ing["ingredient"]}: {ing["ingredients_value"]} {ing["measure"]}\n'
             )
 
         shopping_list += '\n\nПосчитано в Foodgram'
