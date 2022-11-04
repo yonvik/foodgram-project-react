@@ -94,7 +94,7 @@ class Recipe(Model):
         verbose_name='Ингредиенты блюда',
         related_name='recipes',
         to=Ingredient,
-        through='recipes.AmountIngredient',
+        through='AmountIngredient',
     )
     cart = ManyToManyField(
         verbose_name='Список покупок',
@@ -137,6 +137,7 @@ class Recipe(Model):
         )
     def __str__(self) -> str:
         return f'{self.name}. Автор: {self.author.username}'
+
 
 class AmountIngredient(Model):
     """Ингридиенты в блюде"""
