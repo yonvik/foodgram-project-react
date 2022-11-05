@@ -4,7 +4,7 @@ from django.db.models import F, Sum
 from django.http.response import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, status, viewsets, exceptions
+from rest_framework import mixins, status, viewsets
 from rest_framework import permissions as drf_permissions
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
@@ -59,7 +59,7 @@ def create_token(request):
             {"auth_token": f"{token.access_token}"},
             status=status.HTTP_201_CREATED
         )
-    except exceptions.AuthenticationFailed:
+    except User.DoesNotExist:
         return Response(
             {"Пользователя с данным email не существует."},
             status=status.HTTP_400_BAD_REQUEST)

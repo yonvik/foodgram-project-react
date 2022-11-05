@@ -173,6 +173,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         if user.is_anonymous: 
             return False
         return user.carts.filter(id=obj.id).exists()
+
+        
 class RecipesCreateSerializer(serializers.ModelSerializer):
     """ Сериализатор для создания и редактирования рецептов."""
 
