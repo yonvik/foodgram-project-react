@@ -23,7 +23,7 @@ class Tag(Model):
     )
     color = CharField(
         'Цвет тега',
-        max_length=6,
+        max_length=7,
         unique=True,
     )
     slug = SlugField(
