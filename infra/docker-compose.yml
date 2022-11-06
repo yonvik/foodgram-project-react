@@ -1,11 +1,5 @@
 version: '3.8'
 services:
-
-  frontend:
-    image: yonvik/foodgram_front:latest
-    volumes:
-      - ../frontend/:/app/result_build/
-
   db:
     image: postgres:13.0-alpine
     restart: always
@@ -15,15 +9,24 @@ services:
       - ./.env
 
   backend:
-    image: yonvik/foodgram_back:latest
+    image: yonvik/foodgram:latest
     restart: always
     volumes:
       - static_value:/app/static/
-      - media_value:/app/media/
+      - media_value:/app/media
     depends_on:
       - db
     env_file:
       - ./.env
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - backend
 
   nginx:
     image: nginx:1.19.3
