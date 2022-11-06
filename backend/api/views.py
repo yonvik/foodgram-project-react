@@ -52,8 +52,8 @@ def create_token(request):
     serializer.is_valid(raise_exception=True)
     try:
         user = User.objects.get(email=serializer.validated_data['email'])
-        if not check_password(
-            serializer.validated_data['password'], user.password):
+        if not check_password(serializer.validated_data['password'],
+                              user.password):
             return Response(
                 {"Данные авторизации предоставлены не верно."},
                 status=status.HTTP_400_BAD_REQUEST)
@@ -87,8 +87,8 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
 
 
-class IngredientViewSet(mixins.ListModelMixin, 
-                        mixins.RetrieveModelMixin, 
+class IngredientViewSet(mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
                         viewsets.GenericViewSet):
     """Работет с игридиентами."""
 
@@ -151,7 +151,8 @@ class RecipeViewSet(viewsets.ModelViewSet, AddDelViewMixin):
         )
         for ing in ingredients:
             shopping_list += (
-                f'{ing["ingredient"]}: {ing["ingredients_value"]} {ing["measure"]}'
+                f'{ing["ingredient"]}: {ing["ingredients_value"]}'
+                f'{ing["measure"]}'
                 f'{ing["measure"]}\n'
             )
 

@@ -15,6 +15,7 @@ def check_value_validate(value, klass=None):
                 f'{value} не существует'
             )
         return obj[0]
+    return value
 
 
 def hex_color_validator(value):

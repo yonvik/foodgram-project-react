@@ -52,6 +52,7 @@ class Ingredient(Model):
         verbose_name='Еденица измерения',
         max_length=settings.MEASURMENT_COUNT_LENGTH,
     )
+
     class Meta:
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
@@ -134,6 +135,7 @@ class Recipe(Model):
                 name='unique_for_author'
             ),
         )
+
     def __str__(self) -> str:
         return f'{self.name}. Автор: {self.author.username}'
 

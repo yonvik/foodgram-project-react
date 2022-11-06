@@ -13,13 +13,15 @@ class RecipeFilters(FilterSet):
     is_favorited = NumberFilter(method='filter_is_favorited')
     is_in_shopping_cart = NumberFilter(method='filter_shopping_cart')
 
-    def filter_is_favorited(self, queryset, value):
-        if int(value) == 1:
+    def filter_is_favorited(self, queryset, name, value):
+        if value:
             return queryset.filter(favorite=self.request.user.id)
+        return queryset
 
-    def filter_shopping_cart(self, queryset, value):
-        if int(value) == 1:
+    def filter_shopping_cart(self, queryset, name, value):
+        if value:
             return queryset.filter(cart=self.request.user.id)
+        return queryset
 
     class Meta:
         model = Recipe
