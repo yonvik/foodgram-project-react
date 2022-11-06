@@ -109,7 +109,7 @@ class TagSerializer(serializers.ModelSerializer):
             'color',
             'slug',
         )
-        
+
 
 class IngredientSerializer(serializers.ModelSerializer):
     """Сериализатор для вывода ингридиентов."""
@@ -125,7 +125,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    ingredients = serializers.SerializerMethodField() 
+    ingredients = serializers.SerializerMethodField()
     tags = TagSerializer(many=True)
     image = Base64ImageField()
     is_favorited = serializers.SerializerMethodField()
@@ -136,7 +136,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'tags',
-            'author', 
+            'author',
             'ingredients',
             'is_favorited',
             'is_in_shopping_cart',
@@ -146,34 +146,34 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cooking_time'
         )
 
-    def get_ingredients(self, obj): 
-        """Получает список ингридиентов для рецепта.""" 
+    def get_ingredients(self, obj):
+        """Получает список ингридиентов для рецепта."""
 
-        ingredients = obj.ingredients.values( 
+        ingredients = obj.ingredients.values(
             'id',
             'name',
             'measurement_unit',
-            amount=F('recipe__amount') 
-        ) 
-        return ingredients 
+            amount=F('recipe__amount')
+        )
+        return ingredients
 
-    def get_is_favorited(self, obj): 
-        """Проверка - находится ли рецепт в избранном.""" 
+    def get_is_favorited(self, obj):
+        """Проверка - находится ли рецепт в избранном."""
 
-        user = self.context.get('request').user 
-        if user.is_anonymous: 
-            return False 
-        return user.favorites.filter(id=obj.id).exists() 
+        user = self.context.get('request').user
+        if user.is_anonymous:
+            return False
+        return user.favorites.filter(id=obj.id).exists()
 
-    def get_is_in_shopping_cart(self, obj): 
+    def get_is_in_shopping_cart(self, obj):
         """Проверка - находится ли рецепт в списке  покупок."""
 
-        user = self.context.get('request').user 
-        if user.is_anonymous: 
+        user = self.context.get('request').user
+        if user.is_anonymous:
             return False
         return user.carts.filter(id=obj.id).exists()
 
-        
+
 class RecipesCreateSerializer(serializers.ModelSerializer):
     """ Сериализатор для создания и редактирования рецептов."""
 
@@ -183,7 +183,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
     )
     image = Base64ImageField()
     ingredients = serializers.ListField()
-    
+
     class Meta:
         model = Recipe
         fields = (
@@ -199,7 +199,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
 
     def create_amount_ingredients(self, ingredients, recipe):
         """Обновляет ингридиенты в рецепте."""
-        
+
         create_ingredient = [
             AmountIngredient(
                 recipe=recipe,
@@ -209,7 +209,6 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
             for ingredient in ingredients]
         AmountIngredient.objects.bulk_create(create_ingredient)
 
-    
     def create(self, validated_data):
         """Создаёт рецепт."""
 

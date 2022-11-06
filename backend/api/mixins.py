@@ -19,7 +19,6 @@ class AddDelViewMixin:
         if user.is_anonymous:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-
         obj = get_object_or_404(self.queryset, id=obj_id)
         serializer = self.add_serializer(
             obj, context={'request': self.request}

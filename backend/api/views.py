@@ -52,7 +52,8 @@ def create_token(request):
     serializer.is_valid(raise_exception=True)
     try:
         user = User.objects.get(email=serializer.validated_data['email'])
-        if not check_password(serializer.validated_data['password'], user.password):
+        if not check_password(
+            serializer.validated_data['password'], user.password):
             return Response(
                 {"Данные авторизации предоставлены не верно."},
                 status=status.HTTP_400_BAD_REQUEST)
@@ -70,7 +71,7 @@ def create_token(request):
 @api_view(['POST'])
 def delete_token(request):
     """Удаление токена."""
-    
+
     if request.user.is_anonymous:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
     return Response(
@@ -86,10 +87,9 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
 
 
-class IngredientViewSet(mixins.ListModelMixin,
-                                mixins.RetrieveModelMixin,
-                                viewsets.GenericViewSet
-                                ):
+class IngredientViewSet(mixins.ListModelMixin, 
+                        mixins.RetrieveModelMixin, 
+                        viewsets.GenericViewSet):
     """Работет с игридиентами."""
 
     queryset = models.Ingredient.objects.all()
@@ -108,7 +108,6 @@ class RecipeViewSet(viewsets.ModelViewSet, AddDelViewMixin):
     add_serializer = serializers.ShortRecipeSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilters
-
 
     def get_serializer_class(self):
         """Выбор сериализатора в зависимости от запроса."""
@@ -135,7 +134,7 @@ class RecipeViewSet(viewsets.ModelViewSet, AddDelViewMixin):
     @action(methods=('get',), detail=False)
     def download_shopping_cart(self, request):
         """Загружает файл *.txt со списком покупок."""
-        
+
         user = self.request.user
         if not user.carts.exists():
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -152,7 +151,8 @@ class RecipeViewSet(viewsets.ModelViewSet, AddDelViewMixin):
         )
         for ing in ingredients:
             shopping_list += (
-                f'{ing["ingredient"]}: {ing["ingredients_value"]} {ing["measure"]}\n'
+                f'{ing["ingredient"]}: {ing["ingredients_value"]} {ing["measure"]}'
+                f'{ing["measure"]}\n'
             )
 
         shopping_list += '\n\nПосчитано в Foodgram'
