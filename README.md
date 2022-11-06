@@ -1,5 +1,8 @@
-# Продуктовый помощник 
+![workflow](https://github.com/duch0l0/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
+## Проект доступен по [адресу](http://130.193.37.216/recipes)
+
+# Продуктовый помощник 
 Этот сервис позваляет управлять рецептами
 Here you can: 
 - Создать собственный рецепт
@@ -32,7 +35,6 @@ Here you can:
 ## Рабочие ручки
  - > http://localhost/admin/ - страница админа
  - > http://localhost/signin/ - страница приложения
-## Проект доступен по адрессу : http://130.193.37.216/recipes
 
 ## Автор Backend: 
 - [Андрей Янковский](https://github.com/yonvik)
