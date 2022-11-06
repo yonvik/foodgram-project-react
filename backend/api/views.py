@@ -2,19 +2,21 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password
 from django.db.models import F, Sum
 from django.http.response import HttpResponse
-from djoser.views import UserViewSet as DjoserUserViewSet
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, status, viewsets
+from djoser.views import UserViewSet as DjoserUserViewSet
+from recipes import models
+from rest_framework import mixins
 from rest_framework import permissions as drf_permissions
+from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from users.models import User
 
 from . import paginators, permissions, serializers
 from .filters import IngredientSearchFilterSet, RecipeFilters
 from .mixins import AddDelViewMixin
-from recipes import models
-from users.models import User
+
 
 class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     """Кастомный вьюсет Djoser."""

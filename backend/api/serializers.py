@@ -1,10 +1,9 @@
 from django.conf import settings
-from drf_extra_fields.fields import Base64ImageField
 from django.db.models import F
-from rest_framework import serializers
 from django.shortcuts import get_object_or_404
-
-from recipes.models import Ingredient, Recipe, Tag, AmountIngredient
+from drf_extra_fields.fields import Base64ImageField
+from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
+from rest_framework import serializers
 from users.models import User
 from users.validators import username_validator
 

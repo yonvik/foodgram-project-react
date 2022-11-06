@@ -1,7 +1,6 @@
-from django_filters.rest_framework import filters, NumberFilter, FilterSet
+from django_filters.rest_framework import FilterSet, NumberFilter, filters
+from recipes.models import Recipe, Tag
 from rest_framework.filters import SearchFilter
-
-from recipes.models import Tag, Recipe
 
 
 class RecipeFilters(FilterSet):
@@ -29,5 +28,4 @@ class RecipeFilters(FilterSet):
 
 class IngredientSearchFilterSet(SearchFilter):
     """Поиск по названию ингредиента."""
-    print('АОаоаооаа', flush=True)
     search_param = 'name'
