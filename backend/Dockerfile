@@ -1,7 +1,7 @@
 FROM python:3.8-slim
 
 COPY /backend /app
-COPY /data/ingredients.csv /data/ingredients.csv
+COPY /data/ingredients.csv /data/ingredients.json
 
 WORKDIR /app
 
