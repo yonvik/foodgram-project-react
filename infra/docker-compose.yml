@@ -1,10 +1,8 @@
-version: '3.3'
+version: '3.8'
 services:
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: yonvik/foodgram_front:latest
     volumes:
       - ../frontend/:/app/result_build/
 
@@ -17,16 +15,8 @@ services:
       - ./.env
 
   backend:
-#    Раскоментить если локально.
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
+    image: yonvik/foodgram_back:latest
     restart: always
-#    Убрать в фаил
-#    command: >
-#      bash -c "python manage.py migrate &&
-#      python manage.py collectstatic --noinput &&
-#      gunicorn --bind 0:8000 foodgram.wsgi"
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
