@@ -32,6 +32,7 @@ Here you can:
 ## Рабочие ручки
  - > http://localhost/admin/ - страница админа
  - > http://localhost/signin/ - страница приложения
+## Проект доступен по адрессу : http://130.193.37.216/recipes
 
 ## Автор Backend: 
 - [Андрей Янковский](https://github.com/yonvik)
