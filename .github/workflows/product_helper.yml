@@ -45,7 +45,7 @@ jobs:
             with:
               push: true
               context: ./backend/
-              tags: ${{ secrets.DOCKER_USERNAME }}/infra_backend_1:latest
+              tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
 
     deploy:
       runs-on: ubuntu-latest
@@ -61,7 +61,7 @@ jobs:
               passphrase: ${{ secrets.PASSPHRASE }}
               stack_file_name: docker-compose.yaml
               script: |
-                  sudo docker pull ${{ secrets.DOCKER_USERNAME }}/infra_backend_1:latest
+                  sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
                   sudo docker-compose stop
                   sudo docker-compose rm backend
                   touch .env
