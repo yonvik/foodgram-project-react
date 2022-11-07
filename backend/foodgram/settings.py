@@ -30,8 +30,8 @@ INSTALLED_APPS = [
     'djoser',
     'django_filters',
     'api.apps.ApiConfig',
-    'recipes.apps.RecipesConfig',
-    'users.apps.UsersConfig',
+    'recipes',
+    'users',
     'django_extensions',
 ]
 
