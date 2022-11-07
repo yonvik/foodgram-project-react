@@ -64,9 +64,30 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserSubscribeSerializer(UserSerializer):
-    """Сериализатор вывода авторов на которых подписан текущий пользователь."""
+    """Сериализатор создания связи подписки/избранного/шопинг карты."""
 
     recipes = ShortRecipeSerializer(many=True, read_only=True)
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count',
+        )
+        read_only_fields = '__all__',
+
+
+class SubscribeListSerializer(UserSerializer):
+    "Сериализатор вывода авторов на которых подписан текущий пользователь."
+
+    recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 
     class Meta:
@@ -87,6 +108,19 @@ class UserSubscribeSerializer(UserSerializer):
         """ Показывает общее количество рецептов у каждого автора."""
 
         return obj.recipes.count()
+
+    def get_recipes(self, obj):
+        """Показывает рецепты избранного автора."""
+
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        recipes = Recipe.objects.filter(author=obj)
+        limit = request.query_params.get('recipes_limit')
+        if limit:
+            recipes = recipes[:int(limit)]
+        return ShortRecipeSerializer(
+            recipes, many=True, context={'request': request}).data
 
 
 class TokenSerializer(serializers.Serializer):
