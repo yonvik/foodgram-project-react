@@ -1,6 +1,7 @@
 from django_filters.rest_framework import FilterSet, NumberFilter, filters
-from recipes import models
 from rest_framework.filters import SearchFilter
+
+from backend.recipes.models import Recipe, Tag
 
 
 class RecipeFilters(FilterSet):
@@ -8,7 +9,7 @@ class RecipeFilters(FilterSet):
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',
         to_field_name='slug',
-        queryset=models.Tag.objects.all()
+        queryset=Tag.objects.all()
     )
     is_favorited = NumberFilter(method='filter_is_favorited')
     is_in_shopping_cart = NumberFilter(method='filter_shopping_cart')
@@ -24,7 +25,7 @@ class RecipeFilters(FilterSet):
         return queryset
 
     class Meta:
-        model = models.Recipe
+        model = Recipe
         fields = ('author', 'tags', 'is_favorited', 'is_in_shopping_cart')
 
 
