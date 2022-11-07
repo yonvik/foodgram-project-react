@@ -20,8 +20,7 @@ jobs:
           pip install -r backend/requirements.txt
       - name: Test with flake8
         run: |
-          python -m flake8 --ignore {{I001}} {{backend/api/filters.py}}
-          python -m flake8
+          python -m flake8 --ignore {{I001}} {{./backend/api/filters.py}}
 
   build_image_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
