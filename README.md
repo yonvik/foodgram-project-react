@@ -1,4 +1,4 @@
-![workflow](https://github.com/yonvik/foodgram-project-react/actions/workflows/main.yml/badge.svg)
+![workflow](https://github.com/yonvik/foodgram-project-react/actions/workflows/product_helper.yml/badge.svg)
 
 ## Проект доступен по [адресу](http://130.193.37.216/recipes)
 
