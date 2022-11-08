@@ -4,18 +4,18 @@ from django.db.models import F, Sum
 from django.http.response import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
-from recipes import models
 from rest_framework import mixins
 from rest_framework import permissions as drf_permissions
 from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from users.models import User
 
 from . import paginators, permissions, serializers
 from .filters import IngredientSearchFilterSet, RecipeFilters
 from .mixins import AddDelViewMixin
+from recipes import models
+from users.models import User
 
 
 class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
@@ -147,17 +147,16 @@ class RecipeViewSet(viewsets.ModelViewSet, AddDelViewMixin):
 
         filename = f'{user.username}_shopping_list.txt'
         shopping_list = (
-            f'Список покупок для:\n\n{user.first_name}\n\n'
+            f'Список покупок для: {user.first_name}\n'
         )
+
         for ing in ingredients:
             shopping_list += (
                 f'{ing["ingredient"]}: {ing["ingredients_value"]}'
-                f'{ing["measure"]}'
                 f'{ing["measure"]}\n'
             )
 
-        shopping_list += '\n\nПосчитано в Foodgram'
-
+        shopping_list += '\nПосчитано в Foodgram'
         response = HttpResponse(
             shopping_list, content_type='text.txt; charset=utf-8'
         )

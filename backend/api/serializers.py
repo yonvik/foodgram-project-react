@@ -2,8 +2,9 @@ from django.conf import settings
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
 from rest_framework import serializers
+
+from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
 from users.models import User
 from users.validators import username_validator
 
@@ -82,11 +83,17 @@ class UserSubscribeSerializer(UserSerializer):
             'recipes_count',
         )
         read_only_fields = '__all__',
+    
+    def get_recipes_count(self, obj):
+        """ Показывает общее количество рецептов у каждого автора."""
+
+        return obj.recipes.count()
 
 
 class SubscribeListSerializer(UserSerializer):
     "Сериализатор вывода авторов на которых подписан текущий пользователь."
 
+    is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 
@@ -104,10 +111,13 @@ class SubscribeListSerializer(UserSerializer):
         )
         read_only_fields = '__all__',
 
-    def get_recipes_count(self, obj):
-        """ Показывает общее количество рецептов у каждого автора."""
+    def get_is_subscribed(self, obj):
+        """Проверка подписки пользователей."""
 
-        return obj.recipes.count()
+        user = self.context.get('request').user
+        if user.is_anonymous or user == obj:
+            return False
+        return user.subscribe.filter(id=obj.id).exists()
 
     def get_recipes(self, obj):
         """Показывает рецепты избранного автора."""
@@ -121,6 +131,11 @@ class SubscribeListSerializer(UserSerializer):
             recipes = recipes[:int(limit)]
         return ShortRecipeSerializer(
             recipes, many=True, context={'request': request}).data
+
+    def get_recipes_count(self, obj):
+        """ Показывает общее количество рецептов у каждого автора."""
+
+        return obj.recipes.count()
 
 
 class TokenSerializer(serializers.Serializer):

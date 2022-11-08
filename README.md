@@ -1,10 +1,10 @@
-![workflow](https://github.com/duch0l0/foodgram-project-react/actions/workflows/main.yml/badge.svg)
+![workflow](https://github.com/yonvik/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
 ## Проект доступен по [адресу](http://130.193.37.216/recipes)
 
 # Продуктовый помощник 
 Этот сервис позваляет управлять рецептами
-Here you can: 
+Здесь вы можете: 
 - Создать собственный рецепт
 - Найти новый для вас рецепт, добавить его в избранное или подписаться на автора
 - Добавить его в список покупок и скачать в формате .txt
@@ -32,7 +32,7 @@ Here you can:
 	  
 	Создать суперпользователя:
 	- - > docker-compose exec backend python manage.py createsuperuser 
-## Рабочие ручки
+## Рабочие эндпоинты
  - > http://localhost/admin/ - страница админа
  - > http://localhost/signin/ - страница приложения
 
